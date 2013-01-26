@@ -3,7 +3,7 @@ Catalyst driver on Linux.
 
 The Catalyst driver on Linux is supposed to work with the following command:
 
-	aticonfig --pplib-cmd "set fanspeed 0 audo"
+	aticonfig --pplib-cmd "set fanspeed 0 auto"
 
 which should regulate the fan speed automatically. Unfortunately this does not
 work. Dear ATI: this is very lame.
