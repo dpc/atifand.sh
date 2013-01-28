@@ -14,8 +14,6 @@ function GET_TEMP
 	aticonfig --odgt | grep Temperature | sed -e 's/.*- \([0-9]\+\)\..*/\1/g'
 }
 
-aticonfig --od-enable 1>/dev/null
-
 fan_d=$(($fan_max - $fan_min))
 temp_d=$(($temp_max - $temp_min))
 fan_is_idle=1
