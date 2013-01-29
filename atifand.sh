@@ -16,27 +16,38 @@ function GET_TEMP
 
 fan_d=$(($fan_max - $fan_min))
 temp_d=$(($temp_max - $temp_min))
-fan_is_idle=1
+fan_is_idle=0
 fan=$fan_idle
+last_fan=$fan
 
 while : ; do
 	temp=`GET_TEMP`
 
-	if [ $temp -lt $temp_idle ]; then
-		fan=$fan_idle
-		fan_is_idle=1
-	elif [ $temp -lt $temp_min -a $fan_is_idle == 0 ]; then
-		fan=$fan_min
-	elif [ $temp -gt $temp_max ]; then
+	if (( $temp < $temp_min )); then
+		if (( $temp <= $temp_idle )); then
+			fan=$fan_idle
+			fan_is_idle=1
+		elif (( $fan_is_idle == 1 )); then
+			fan=$fan_idle
+		else
+			fan=$fan_min
+		fi
+	else
 		fan_is_idle=0
-		fan=$fan_max
-	elif [ $temp -gt $temp_min ]; then
-		fan_is_idle=0
-		temp_p=$(((($temp - $temp_min) * 100) / $temp_d))
-		fan=$(((fan_min + (($temp_p * $temp_d)) / 100)))
+
+		if (( $temp > $temp_max )); then
+			fan=$fan_max
+		else
+			fan_is_idle=0
+			temp_p=$(((($temp - $temp_min) * 100) / $temp_d))
+			fan=$(((fan_min + (($temp_p * $temp_d)) / 100)))
+		fi
 	fi
+
+	fan=$((($fan + ($last_fan * 3)) / 4))
 
 	[ ! -z "$1" ] && echo "TEMP: $temp -> FAN: $fan"
 	aticonfig --pplib-cmd "set fanspeed 0 $fan" 1>/dev/null
+	last_fan=$fan
 	sleep 10
 done
