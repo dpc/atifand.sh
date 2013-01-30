@@ -40,7 +40,7 @@ while : ; do
 		else
 			fan_is_idle=0
 			temp_p=$(((($temp - $temp_min) * 100) / $temp_d))
-			fan=$(((fan_min + (($temp_p * $temp_d)) / 100)))
+			fan=$((fan_min + (($temp_p * $fan_d) / 100)))
 		fi
 	fi
 
