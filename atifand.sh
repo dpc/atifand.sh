@@ -44,7 +44,9 @@ while : ; do
 		fi
 	fi
 
-	fan=$((($fan + ($last_fan * 3)) / 4))
+	if (( $fan < $last_fan )); then
+		fan=$((($fan + ($last_fan * 3)) / 4))
+	fi
 
 	[ ! -z "$1" ] && echo "TEMP: $temp -> FAN: $fan"
 	aticonfig --pplib-cmd "set fanspeed 0 $fan" 1>/dev/null
