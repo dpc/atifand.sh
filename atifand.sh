@@ -11,7 +11,7 @@ temp_max=80       # hitting this means going fan_max
 
 function GET_TEMP
 {
-	aticonfig --odgt | grep Temperature | sed -e 's/.*- \([0-9]\+\)\..*/\1/g'
+	sensors | grep temp1 | grep -Po "(?<=\+)[^.]+" | head -1
 }
 
 fan_d=$(($fan_max - $fan_min))
@@ -49,7 +49,7 @@ while : ; do
 	fi
 
 	[ ! -z "$1" ] && echo "TEMP: $temp -> FAN: $fan"
-	aticonfig --pplib-cmd "set fanspeed 0 $fan" 1>/dev/null
+	echo $fan > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1
 	last_fan=$fan
 	sleep 10
 done
