@@ -8,7 +8,7 @@ temp_min=65       # hitting above this, the fan will be switched to something be
 temp_max=80       # hitting this means going fan_max
                   # temperatures between temp_min and temp_max
                   # linearly adjust fan speed between fan_min and fan_max
-interval=10       # how often to check fan and adjust speed
+interval=10       # how often to check temp and adjust fan speed
 
 function GET_TEMP
 {
