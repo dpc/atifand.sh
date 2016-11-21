@@ -8,10 +8,11 @@ temp_min=65       # hitting above this, the fan will be switched to something be
 temp_max=80       # hitting this means going fan_max
                   # temperatures between temp_min and temp_max
                   # linearly adjust fan speed between fan_min and fan_max
+interval=10       # how often to check temp and adjust fan speed
 
 function GET_TEMP
 {
-	aticonfig --odgt | grep Temperature | sed -e 's/.*- \([0-9]\+\)\..*/\1/g'
+	sensors | grep temp1 | grep -Po "(?<=\+)[^.]+" | head -1
 }
 
 fan_d=$(($fan_max - $fan_min))
@@ -49,7 +50,7 @@ while : ; do
 	fi
 
 	[ ! -z "$1" ] && echo "TEMP: $temp -> FAN: $fan"
-	aticonfig --pplib-cmd "set fanspeed 0 $fan" 1>/dev/null
+	echo $fan > /sys/class/drm/card0/device/hwmon/hwmon0/pwm1
 	last_fan=$fan
-	sleep 10
+	sleep $interval
 done
